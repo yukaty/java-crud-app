@@ -11,10 +11,13 @@ import java.util.ArrayList;
 public class VendorDao {
 
     // Database connection
-    private static final String URL = "jdbc:mariadb://localhost:8889/java_db_app";
-    private static final String USER_NAME = "root";
-    private static final String PASSWORD = "root"; 
-    
+//  private static final String URL = "jdbc:mariadb://localhost:8889/java_db_app";
+//  private static final String USER_NAME = "root";
+//  private static final String PASSWORD = "root"; 
+  private static final String URL = "jdbc://rtzsaka6vivj2zp1.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/mffj6f4zbk9hazrl/java_db_app";
+  private static final String USER_NAME = "r6sxv63pde8ljs1u";
+  private static final String PASSWORD = "x4ecppm06ii1lmbs"; 
+
     /*
      * SELECT
      */
