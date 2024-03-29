@@ -70,26 +70,26 @@
                 </tr>
                 <%
                 // Get the product list from the request
-                ArrayList<ProductDto> productList = (ArrayList<ProductDto>) request.getAttribute("productList");
+                        ArrayList<data.ProductDto> productList = (ArrayList<data.ProductDto>) request.getAttribute("productList");
 
-                if (productList != null) {
-                    // Display the product list line by line
-                    for (ProductDto product : productList) {
-                        out.println("<tr>");
-                        out.println("<td class='hidden-id'>" + product.getId() + "</td>");
-                        out.println("<td>" + product.getProductCode() + "</td>");
-                        out.println("<td>" + product.getProductName() + "</td>");
-                        out.println("<td>" + product.getPrice() + "</td>");
-                        out.println("<td>" + product.getStockQuantity() + "</td>");
-                        out.println("<td>" + product.getVendorCode() + "</td>");
-                        out.println("<td><a href='" + request.getContextPath() + "/edit?id="
-                                     + product.getId() + "'><img src='images/edit.png' alt='Edit' class='edit-icon'></a></td>");
-                        out.println("<td><a href='" + request.getContextPath() + "/delete?id=" + product.getId()
-                                                + "' onclick=\"return confirm('Are you sure you want to delete the product: " + product.getProductName() + "?')\">"
-                                                        + "<img src='images/delete.png' alt='Delete' class='delete-icon'></a></td>");
-                        out.println("</tr>");
-                    }
-                }
+                        if (productList != null) {
+                            // Display the product list line by line
+                            for (data.ProductDto product : productList) {
+                                out.println("<tr>");
+                                out.println("<td class='hidden-id'>" + product.getId() + "</td>");
+                                out.println("<td>" + product.getProductCode() + "</td>");
+                                out.println("<td>" + product.getProductName() + "</td>");
+                                out.println("<td>" + product.getPrice() + "</td>");
+                                out.println("<td>" + product.getStockQuantity() + "</td>");
+                                out.println("<td>" + product.getVendorCode() + "</td>");
+                                out.println("<td><a href='" + request.getContextPath() + "/edit?id="
+                                             + product.getId() + "'><img src='images/edit.png' alt='Edit' class='edit-icon'></a></td>");
+                                out.println("<td><a href='" + request.getContextPath() + "/delete?id=" + product.getId()
+                                                        + "' onclick=\"return confirm('Are you sure you want to delete the product: " + product.getProductName() + "?')\">"
+                                                                + "<img src='images/delete.png' alt='Delete' class='delete-icon'></a></td>");
+                                out.println("</tr>");
+                            }
+                        }
                 %>
             </table>
         </article>

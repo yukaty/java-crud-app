@@ -1,14 +1,13 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="java.util.Objects"%>
-<%@ page import="data.ProductDto" %>
 <%@ page import="data.VendorDto" %>
 
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edit Product</title>
+<title>Register Product</title>
 <link rel="stylesheet"
     href="<%=request.getContextPath()%>/css/style.css">
 <%-- Google Fonts --%>
@@ -27,7 +26,6 @@
     <main>
         <%
         // Get request parameters
-        String id = request.getParameter("id");
         String productCode = request.getParameter("product_code");
         String productName = request.getParameter("product_name");
         String price = request.getParameter("price");
@@ -40,21 +38,6 @@
         price = Objects.toString(price, "");
         stockQuantity = Objects.toString(stockQuantity, "");
         vendorCode = Objects.toString(vendorCode, "");
-        
-        // Get the Product List
-        ArrayList<ProductDto> productList = (ArrayList<ProductDto>) request.getAttribute("productList");
-
-        if( productList != null && !productList.isEmpty() ) {
-            // Get the first record
-            ProductDto productData = productList.get(0);
-            
-            id = Integer.toString( productData.getId() );
-            productCode = Integer.toString( productData.getProductCode() );
-            productName = productData.getProductName();
-            price = Integer.toString( productData.getPrice() );
-            stockQuantity = Integer.toString( productData.getStockQuantity() );
-            vendorCode = Integer.toString( productData.getVendorCode() );
-        }
         %>
         <article class="registration">
             <%
@@ -65,11 +48,11 @@
             }
             %>
 
-            <h1>Edit Product</h1>
+            <h1>Register New Product</h1>
             <div class="back">
                 <a href="<%=request.getContextPath()%>/list" class="btn">&lt; Back</a>
             </div>
-            <form action="<%=request.getContextPath()%>/update?id=<%= id %>" method="post" class="registration-form">
+            <form action="<%=request.getContextPath()%>/create" method="post" class="registration-form">
                 <div>
                     <label for="product_code">Product Code</label>
                     <input type="number" name="product_code" min="0" max="100000000" value="<%= productCode %>" required>
@@ -82,24 +65,22 @@
                     <label for="vendor_code">Vendor Code</label>
                     <select name="vendor_code" required>
                         <option disabled selected value>Select</option>
-                        <%
-                        // Get the vendor list
-                        ArrayList<VendorDto> vendorList = (ArrayList<VendorDto>) request.getAttribute("vendorList");
+                        <%// Get the vendor list
+                        ArrayList<data.VendorDto> vendorList = (ArrayList<data.VendorDto>) request.getAttribute("vendorList");
 
                         if (vendorList != null) {
                             // Output each vendor data as an option in the select box
-                            for (VendorDto vendor : vendorList) {
+                            for (data.VendorDto vendor : vendorList) {
                                 // Convert vendor code from Int to String
                                 String nowVendorCode = Integer.toString( vendor.getVendorCode() );
                                 // If the previous vendor data matches, select it
                                 String selected = Objects.equals(vendorCode, nowVendorCode) ? "selected" : "";
                                 out.println("<option value='" + vendor.getVendorCode() + "' " + selected + ">" + vendor.getVendorCode() + "</option>");
                             }
-                        }
-                        %>
+                        }%>
                     </select>
                 </div>
-                <button type="submit" class="submit-btn" name="submit" value="update">Update</button>
+                <button type="submit" class="submit-btn" name="submit" value="create">Register</button>
             </form>
         </article>
     </main>

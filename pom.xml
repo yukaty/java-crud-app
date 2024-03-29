@@ -13,15 +13,7 @@
     </dependency>
   </dependencies>
   <build>
-    <sourceDirectory>WEB-INF/src</sourceDirectory>
-    <resources>
-      <resource>
-        <directory>work</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </resource>
-    </resources>
+    <sourceDirectory>src/main/java</sourceDirectory>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
