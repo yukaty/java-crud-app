@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -59,7 +60,7 @@ public class DispEditServlet extends HttpServlet {
             // Get the list of vendor data
             vendorList = vendor.read();
 
-        } catch (SQLException e) {
+        } catch (SQLException | URISyntaxException e) {
             request.setAttribute("failureMessage", "Database access error occurred. Please contact the system administrator.");
             request.getRequestDispatcher(FAILURE_PAGE).forward(request, response);
             return;

@@ -53,6 +53,7 @@ public class DispListServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             request.setAttribute("failureMessage", "Failed to get data. Contact the administrator.");
+//            request.setAttribute("failureMessage", e.getMessage());
         }
 
         // Forward to the list page

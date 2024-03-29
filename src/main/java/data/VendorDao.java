@@ -1,5 +1,7 @@
 package data;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -14,15 +16,23 @@ public class VendorDao {
 //    private static final String URL = "jdbc:mariadb://localhost:8889/java_db_app";
 //    private static final String USER_NAME = "root";
 //    private static final String PASSWORD = "root"; 
-    private static final String URL = "jdbc://rtzsaka6vivj2zp1.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/mffj6f4zbk9hazrl/java_db_app";
-    private static final String USER_NAME = "r6sxv63pde8ljs1u";
-    private static final String PASSWORD = "x4ecppm06ii1lmbs"; 
+    
+    private static Connection getConnection() throws URISyntaxException, SQLException {
+        URI jdbUri = new URI(System.getenv("JAWSDB_URL"));
+
+        String username = jdbUri.getUserInfo().split(":")[0];
+        String password = jdbUri.getUserInfo().split(":")[1];
+        String port = String.valueOf(jdbUri.getPort());
+        String dburl = "jdbc:mysql://" + jdbUri.getHost() + ":" + port + jdbUri.getPath();
+
+        return DriverManager.getConnection(dburl, username, password);
+    }
     
     /*
      * SELECT
      */
     public ArrayList<VendorDto> read()
-            throws SQLException {
+            throws SQLException, URISyntaxException {
 
         // SQL
         String sql = "SELECT vendor_code FROM vendors;";
@@ -31,8 +41,9 @@ public class VendorDao {
         ArrayList<VendorDto> dataList = new ArrayList<VendorDto>();
 
         // Connect to database
-        try (Connection con = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
-                Statement statement = con.createStatement();) {
+//        try (Connection con = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
+        try (Connection con = getConnection();        
+        Statement statement = con.createStatement();) {
 
             // Execute SQL
             ResultSet result = statement.executeQuery(sql);

@@ -1,6 +1,7 @@
 package data;
 
-
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,13 +14,21 @@ import java.util.Objects;
 public class ProductDao {
 
     // Database connection
-//    private static final String URL = "jdbc:mariadb://localhost:8889/java_db_app";
+//    private static final String DB_URL = "jdbc:mariadb://localhost:8889/java_db_app";
 //    private static final String USER_NAME = "root";
 //    private static final String PASSWORD = "root"; 
-    private static final String URL = "jdbc://rtzsaka6vivj2zp1.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/mffj6f4zbk9hazrl/java_db_app";
-    private static final String USER_NAME = "r6sxv63pde8ljs1u";
-    private static final String PASSWORD = "x4ecppm06ii1lmbs"; 
 
+    private static Connection getConnection() throws URISyntaxException, SQLException {
+        URI jdbUri = new URI(System.getenv("JAWSDB_URL"));
+
+        String username = jdbUri.getUserInfo().split(":")[0];
+        String password = jdbUri.getUserInfo().split(":")[1];
+        String port = String.valueOf(jdbUri.getPort());
+        String dburl = "jdbc:mysql://" + jdbUri.getHost() + ":" + port + jdbUri.getPath();
+
+        return DriverManager.getConnection(dburl, username, password);
+    }
+    
     /*
      *  INSERT
      */
@@ -32,7 +41,8 @@ public class ProductDao {
                 ") VALUES(?, ?, ?, ?, ?);";
 
         // Connect to database
-        try (Connection con = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
+//      try (Connection con = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
+        try (Connection con = getConnection();        
                 PreparedStatement statement = con.prepareStatement(sql)) {
 
             // Placeholders
@@ -45,7 +55,7 @@ public class ProductDao {
             // Execute SQL 
             rowCnt = statement.executeUpdate();
             
-        } catch (SQLException e) {
+        } catch (SQLException | URISyntaxException e) {
             System.out.println("Error occurred：" + e.getMessage());
         }
 
@@ -70,7 +80,8 @@ public class ProductDao {
         keyword = Objects.toString(keyword, "");
 
         // Connect to database
-        try (Connection con = DriverManager.getConnection(URL, USER_NAME, PASSWORD)) {
+//        try (Connection con = DriverManager.getConnection(URL, USER_NAME, PASSWORD)) {
+          try (Connection con = getConnection()) {
 
             if (id > 0) {
                 // If an ID is specified
@@ -118,6 +129,8 @@ public class ProductDao {
                     dataList.add(productData);
                 }
             }
+        } catch ( URISyntaxException e) {
+            System.out.println("Error occerred：" + e.getMessage());
         }
 
         return dataList; 
@@ -139,7 +152,8 @@ public class ProductDao {
                 "WHERE id = ?;";
 
         // Connect to database
-        try (Connection con = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
+//        try (Connection con = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
+        try (Connection con = getConnection();        
                 PreparedStatement statement = con.prepareStatement(sql)) {
 
             // Placeholders
@@ -153,7 +167,7 @@ public class ProductDao {
             // Execute SQL
             rowCnt = statement.executeUpdate();
             
-        } catch (SQLException e) {
+        } catch (SQLException | URISyntaxException e) {
             System.out.println("Error occurred：" + e.getMessage());
         }
 
@@ -170,7 +184,8 @@ public class ProductDao {
         String sql = "DELETE FROM products WHERE id = ?;";
 
         // Connect to database
-        try (Connection con = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
+//        try (Connection con = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
+        try (Connection con = getConnection();
                 PreparedStatement statement = con.prepareStatement(sql)) {
 
             // Placeholders
@@ -178,7 +193,7 @@ public class ProductDao {
 
             // Execute SQL
             rowCnt = statement.executeUpdate();
-        } catch (SQLException e) {
+        } catch (SQLException | URISyntaxException e) {
             System.out.println("Error occerred：" + e.getMessage());
         }
 

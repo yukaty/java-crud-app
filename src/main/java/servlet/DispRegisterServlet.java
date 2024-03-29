@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -39,7 +40,7 @@ public class DispRegisterServlet extends HttpServlet {
                 // If there is vendor data
                 request.setAttribute("vendorList", vendorList);
             }
-        } catch (SQLException e) {
+        } catch (SQLException | URISyntaxException e) {
             request.setAttribute("failureMessage", "Failed to read vendor data. Contact the administrator.");
         }
 
