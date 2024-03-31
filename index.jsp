@@ -20,7 +20,7 @@
 <body>
     <header>
         <nav>
-            <a href="<%=request.getContextPath()%>">Product Management App</a>
+            <a href="<%=request.getContextPath()%>/">Product Management App</a>
         </nav>
     </header>
     <main>
