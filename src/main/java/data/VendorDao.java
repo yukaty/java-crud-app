@@ -11,21 +11,30 @@ import java.util.ArrayList;
 
 //Data Access Object class for Vendor
 public class VendorDao {
-
-    // Database connection
-//    private static final String URL = "jdbc:mariadb://localhost:8889/java_db_app";
-//    private static final String USER_NAME = "root";
-//    private static final String PASSWORD = "root"; 
     
+    /*
+     * DB connection
+     */
     private static Connection getConnection() throws URISyntaxException, SQLException {
-        URI jdbUri = new URI(System.getenv("JAWSDB_URL"));
+        String dbEnvUrl = System.getenv("JAWSDB_URL");
+        
+        // Heroku　(JawsDB)
+        if (dbEnvUrl != null && !dbEnvUrl.isEmpty()) {
+            URI jdbUri = new URI(dbEnvUrl);
 
-        String username = jdbUri.getUserInfo().split(":")[0];
-        String password = jdbUri.getUserInfo().split(":")[1];
-        String port = String.valueOf(jdbUri.getPort());
-        String dburl = "jdbc:mysql://" + jdbUri.getHost() + ":" + port + jdbUri.getPath();
+            String username = jdbUri.getUserInfo().split(":")[0];
+            String password = jdbUri.getUserInfo().split(":")[1];
+            String port = String.valueOf(jdbUri.getPort());
+            String dbUrl = "jdbc:mysql://" + jdbUri.getHost() + ":" + port + jdbUri.getPath();
 
-        return DriverManager.getConnection(dburl, username, password);
+            return DriverManager.getConnection(dbUrl, username, password);
+        } else {
+            // Local
+            String dbUrl = "jdbc:mariadb://localhost:8889/java_db_app";
+            String username = "root";
+            String password = "root";
+            return DriverManager.getConnection(dbUrl, username, password);
+        }
     }
     
     /*
@@ -41,7 +50,6 @@ public class VendorDao {
         ArrayList<VendorDto> dataList = new ArrayList<VendorDto>();
 
         // Connect to database
-//        try (Connection con = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
         try (Connection con = getConnection();        
         Statement statement = con.createStatement();) {
 

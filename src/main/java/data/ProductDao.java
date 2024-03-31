@@ -13,21 +13,31 @@ import java.util.Objects;
 // Data Access Object class for Product
 public class ProductDao {
 
-    // Database connection
-//    private static final String DB_URL = "jdbc:mariadb://localhost:8889/java_db_app";
-//    private static final String USER_NAME = "root";
-//    private static final String PASSWORD = "root"; 
-
+    /*
+     * DB connection
+     */
     private static Connection getConnection() throws URISyntaxException, SQLException {
-        URI jdbUri = new URI(System.getenv("JAWSDB_URL"));
+        String dbEnvUrl = System.getenv("JAWSDB_URL");
 
-        String username = jdbUri.getUserInfo().split(":")[0];
-        String password = jdbUri.getUserInfo().split(":")[1];
-        String port = String.valueOf(jdbUri.getPort());
-        String dburl = "jdbc:mysql://" + jdbUri.getHost() + ":" + port + jdbUri.getPath();
+        // Heroku　(JawsDB)
+        if (dbEnvUrl != null && !dbEnvUrl.isEmpty()) {
+            URI jdbUri = new URI(dbEnvUrl);
 
-        return DriverManager.getConnection(dburl, username, password);
+            String username = jdbUri.getUserInfo().split(":")[0];
+            String password = jdbUri.getUserInfo().split(":")[1];
+            String port = String.valueOf(jdbUri.getPort());
+            String dbUrl = "jdbc:mysql://" + jdbUri.getHost() + ":" + port + jdbUri.getPath();
+
+            return DriverManager.getConnection(dbUrl, username, password);
+        } else {
+            // Local
+            String dbUrl = "jdbc:mariadb://localhost:8889/java_db_app";
+            String username = "root";
+            String password = "root";
+            return DriverManager.getConnection(dbUrl, username, password);
+        }
     }
+
     
     /*
      *  INSERT
@@ -41,7 +51,6 @@ public class ProductDao {
                 ") VALUES(?, ?, ?, ?, ?);";
 
         // Connect to database
-//      try (Connection con = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
         try (Connection con = getConnection();        
                 PreparedStatement statement = con.prepareStatement(sql)) {
 
@@ -80,7 +89,6 @@ public class ProductDao {
         keyword = Objects.toString(keyword, "");
 
         // Connect to database
-//        try (Connection con = DriverManager.getConnection(URL, USER_NAME, PASSWORD)) {
           try (Connection con = getConnection()) {
 
             if (id > 0) {
@@ -152,7 +160,6 @@ public class ProductDao {
                 "WHERE id = ?;";
 
         // Connect to database
-//        try (Connection con = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
         try (Connection con = getConnection();        
                 PreparedStatement statement = con.prepareStatement(sql)) {
 
@@ -184,7 +191,6 @@ public class ProductDao {
         String sql = "DELETE FROM products WHERE id = ?;";
 
         // Connect to database
-//        try (Connection con = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
         try (Connection con = getConnection();
                 PreparedStatement statement = con.prepareStatement(sql)) {
 
