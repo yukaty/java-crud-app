@@ -1,8 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="java.util.Objects"%>
-<%@ page import="data.ProductDto" %>
-<%@ page import="data.VendorDto" %>
+<%@ page import="data.ProductDto"%>
+<%@ page import="data.VendorDto"%>
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -27,40 +27,40 @@
     <main>
         <%
         // Get request parameters
-                String id = request.getParameter("id");
-                String productCode = request.getParameter("product_code");
-                String productName = request.getParameter("product_name");
-                String price = request.getParameter("price");
-                String stockQuantity = request.getParameter("stock_quantity");
-                String vendorCode = request.getParameter("vendor_code");
+        String id = request.getParameter("id");
+        String productCode = request.getParameter("product_code");
+        String productName = request.getParameter("product_name");
+        String price = request.getParameter("price");
+        String stockQuantity = request.getParameter("stock_quantity");
+        String vendorCode = request.getParameter("vendor_code");
 
-                // Convert NULL to empty string
-                productCode = Objects.toString(productCode, "");
-                productName = Objects.toString(productName, "");
-                price = Objects.toString(price, "");
-                stockQuantity = Objects.toString(stockQuantity, "");
-                vendorCode = Objects.toString(vendorCode, "");
-                
-                // Get the Product List
-                ArrayList<data.ProductDto.data.ProductDto> productList = (ArrayList<data.ProductDto.data.ProductDto>) request.getAttribute("productList");
+        // Convert NULL to empty string
+        productCode = Objects.toString(productCode, "");
+        productName = Objects.toString(productName, "");
+        price = Objects.toString(price, "");
+        stockQuantity = Objects.toString(stockQuantity, "");
+        vendorCode = Objects.toString(vendorCode, "");
 
-                if( productList != null && !productList.isEmpty() ) {
+        // Get the Product List
+        ArrayList<data.ProductDto> productList = (ArrayList<data.ProductDto>) request.getAttribute("productList");
+
+        if (productList != null && !productList.isEmpty()) {
             // Get the first record
-            data.ProductDto.data.ProductDto productData = productList.get(0);
-            
-            id = Integer.toString( productData.getId() );
-            productCode = Integer.toString( productData.getProductCode() );
+            data.ProductDto productData = productList.get(0);
+
+            id = Integer.toString(productData.getId());
+            productCode = Integer.toString(productData.getProductCode());
             productName = productData.getProductName();
-            price = Integer.toString( productData.getPrice() );
-            stockQuantity = Integer.toString( productData.getStockQuantity() );
-            vendorCode = Integer.toString( productData.getVendorCode() );
-                }
+            price = Integer.toString(productData.getPrice());
+            stockQuantity = Integer.toString(productData.getStockQuantity());
+            vendorCode = Integer.toString(productData.getVendorCode());
+        }
         %>
         <article class="registration">
             <%
             // If there is a failure message
             String failureMessage = (String) request.getAttribute("failureMessage");
-            if( failureMessage != null && !failureMessage.isEmpty() ) {
+            if (failureMessage != null && !failureMessage.isEmpty()) {
                 out.println("<p class='failure'>" + failureMessage + "</p>");
             }
             %>
@@ -69,32 +69,34 @@
             <div class="back">
                 <a href="<%=request.getContextPath()%>/list" class="btn">&lt; Back</a>
             </div>
-            <form action="<%=request.getContextPath()%>/update?id=<%= id %>" method="post" class="registration-form">
+            <form action="<%=request.getContextPath()%>/update?id=<%=id%>"
+                method="post" class="registration-form">
                 <div>
                     <label for="product_code">Product Code</label>
-                    <input type="number" name="product_code" min="0" max="100000000" value="<%= productCode %>" required>
+                    <input type="number" name="product_code" min="0" max="100000000" value="<%=productCode%>" required>
                     <label for="product_name">Product Name</label>
-                    <input type="text" name="product_name" maxlength="50" value="<%= productName %>" required>
+                    <input type="text" name="product_name" maxlength="50" value="<%=productName%>" required>
                     <label for="price">Unit Price</label>
-                    <input type="number" name="price" min="0" max="100000000" value="<%= price %>" required>
+                    <input type="number" name="price" min="0" max="100000000" value="<%=price%>" required>
                     <label for="stock_quantity">Stock Quantity</label>
-                    <input type="number" name="stock_quantity" min="0" max="100000000" value="<%= stockQuantity %>" required
+                    <input type="number" name="stock_quantity" min="0" max="100000000" value="<%=stockQuantity%>" required>
                     <label for="vendor_code">Vendor Code</label>
                     <select name="vendor_code" required>
                         <option disabled selected value>Select</option>
-                        <%// Get the vendor list
-                        ArrayList<data.VendorDto.data.VendorDto> vendorList = (ArrayList<data.VendorDto.data.VendorDto>) request.getAttribute("vendorList");
-
+                        <%
+                        // Get the vendor list
+                        ArrayList<data.VendorDto> vendorList = (ArrayList<data.VendorDto>) request.getAttribute("vendorList");
                         if (vendorList != null) {
                             // Output each vendor data as an option in the select box
-                            for (data.VendorDto.data.VendorDto vendor : vendorList) {
+                            for (data.VendorDto vendor : vendorList) {
                                 // Convert vendor code from Int to String
-                                String nowVendorCode = Integer.toString( vendor.getVendorCode() );
+                                String nowVendorCode = Integer.toString(vendor.getVendorCode());
                                 // If the previous vendor data matches, select it
                                 String selected = Objects.equals(vendorCode, nowVendorCode) ? "selected" : "";
-                                out.println("<option value='" + vendor.getVendorCode() + "' " + selected + ">" + vendor.getVendorCode() + "</option>");
+                                out.println("<option value='" + vendor.getVendorCode() + "' " + selected + ">" + vendor.getVendorCode() + ": " + vendor.getVendorName() + "</option>");
                             }
-                        }%>
+                        }
+                        %>
                     </select>
                 </div>
                 <button type="submit" class="submit-btn" name="submit" value="update">Update</button>

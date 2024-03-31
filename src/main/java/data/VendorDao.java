@@ -11,13 +11,13 @@ import java.util.ArrayList;
 
 //Data Access Object class for Vendor
 public class VendorDao {
-    
+
     /*
      * DB connection
      */
     private static Connection getConnection() throws URISyntaxException, SQLException {
         String dbEnvUrl = System.getenv("JAWSDB_URL");
-        
+
         // Heroku　(JawsDB)
         if (dbEnvUrl != null && !dbEnvUrl.isEmpty()) {
             URI jdbUri = new URI(dbEnvUrl);
@@ -36,7 +36,7 @@ public class VendorDao {
             return DriverManager.getConnection(dbUrl, username, password);
         }
     }
-    
+
     /*
      * SELECT
      */
@@ -44,13 +44,13 @@ public class VendorDao {
             throws SQLException, URISyntaxException {
 
         // SQL
-        String sql = "SELECT vendor_code FROM vendors;";
+        String sql = "SELECT vendor_code, vendor_name FROM vendors;";
 
         // List of retrieved data
         ArrayList<VendorDto> dataList = new ArrayList<VendorDto>();
 
         // Connect to database
-        try (Connection con = getConnection();        
+        try (Connection con = getConnection();
         Statement statement = con.createStatement();) {
 
             // Execute SQL
@@ -60,6 +60,7 @@ public class VendorDao {
                 // Fill DTO instance with column data
                 VendorDto vendorData = new VendorDto();
                 vendorData.setVendorCode(result.getInt("vendor_code"));
+                vendorData.setVendorName(result.getString("vendor_name"));
 
                 // Add data to list
                 dataList.add(vendorData);
